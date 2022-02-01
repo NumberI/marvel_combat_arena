@@ -3,9 +3,18 @@
 # !/usr/bin/env ruby
 
 RSpec.describe 'ProcessingRequest' do
+
+  PUBLIC_KEY = ENV['PUBLIC_KEY']
+  PRIVATE_KEY = ENV['PRIVATE_KEY']
+  CHARACTERS_URL = "https://gateway.marvel.com/v1/public/characters"
+
   context :request do
+
+    let(:time_now) { Time.utc(2022) }
+    let(:time_now_str) { time_now.to_i.to_s }
+
     before do
-      Timecop.freeze(Time.utc(2022))
+      Timecop.freeze(time_now)
     end
 
     after do
@@ -25,15 +34,18 @@ RSpec.describe 'ProcessingRequest' do
         .yield_self { |file| JSON.parse(file) }
     end
 
-    let(:wrong_url) do
-      'https://gateway.marvel.com/v1/public/characters?name=huk&ts=1640995200&apikey=d37fd2633e3c15a835a6414e3dabf784&hash=ef9ea8e9b1d8979f85985e741144c64f'
-    end
-    let(:wrong_fighter) { 'huk' }
+    let(:url_hash) { Digest::MD5.hexdigest(time_now_str + PRIVATE_KEY + PUBLIC_KEY) }
 
-    let(:url) do
-      'https://gateway.marvel.com/v1/public/characters?name=hulk&ts=1640995200&apikey=d37fd2633e3c15a835a6414e3dabf784&hash=ef9ea8e9b1d8979f85985e741144c64f'
+    let(:wrong_fighter) { 'huk' }
+    let(:wrong_url) do
+      "#{CHARACTERS_URL}?name=#{wrong_fighter}&ts=#{time_now_str}&apikey=#{ENV['PUBLIC_KEY']}&hash=#{url_hash}"
     end
+
+
     let(:fighter) { 'hulk' }
+    let(:url) do
+      "#{CHARACTERS_URL}?name=#{fighter}&ts=#{time_now_str}&apikey=#{ENV['PUBLIC_KEY']}&hash=#{url_hash}"
+    end
 
     let(:description) do
       'Caught in a gamma bomb explosion while trying to save the life of a teenager, '\
@@ -61,8 +73,7 @@ RSpec.describe 'ProcessingRequest' do
 
       expect do
         ProcessingRequest.call([wrong_fighter])
-      end.to raise_error(StandardError,
-                         'Sorry. Character <<huk>> not found! Choose another')
+      end.to raise_error(ProcessingRequest::CharacterNotFound)
     end
 
     it 'checking result' do

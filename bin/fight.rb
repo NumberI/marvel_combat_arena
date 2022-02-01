@@ -22,7 +22,7 @@ def fight
   # а ожидать только определенные ошибки, которые ты сам кидаешь.
   # Так мы будем строить поведение системы именно на прокидывании и перехвате конкретных ошибок,
   # все остальные ошибки считаем не предусмотреными программой, и они не должны перехватываться (мы должны падать)
-rescue ProcessingRequest::ResponseDataError, ProcessingRequest::CharacterNotFound,
+rescue ArgumentError, ProcessingRequest::ResponseDataError, ProcessingRequest::CharacterNotFound,
        ProcessingRequest::ConnectionError => e
   p e.message
   # rescue StandardError => e
