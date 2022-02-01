@@ -8,10 +8,10 @@ $LOAD_PATH.unshift(config) unless $LOAD_PATH.include?(config)
 Gem::Specification.new do |spec|
   spec.name          = 'mca'
   spec.version       = 1
-  spec.authors       = ['Author']
-  spec.email         = ['Author-email']
+  spec.authors       = ['и тут']
+  spec.email         = ['и тут']
 
-  spec.summary       = 'Gem for extending Peatio plugable system with tnc implementation.'
+  spec.summary       = 'Раз уж брать этот файл - так заменять в нем всё'
   spec.description   = ''
   spec.homepage      = 'https://mca-battle.com/'
   # spec.license       = "MIT"
