@@ -1,13 +1,13 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 class BattleService
-
   def initialize(characters, seed)
     @characters = characters
     @seed = seed
     @winners_count = 0
   end
-  
+
   def self.call(...)
     new(...).call
   end
@@ -18,11 +18,11 @@ class BattleService
   end
 
   private
-  
+
   def process_description(hero, word_number)
     words = hero.fetch(:description).gsub(/\.|,/, '').downcase.split(' ')
-    @winners_count += 1 if %w(Gamma Radioactive).any? { |s| words.include? s.downcase }
-    
+    @winners_count += 1 if %w[Gamma Radioactive].any? { |s| words.include? s.downcase }
+
     words[word_number]
   end
 
@@ -37,5 +37,4 @@ class BattleService
       "It's a tie!"
     end
   end
-
 end
